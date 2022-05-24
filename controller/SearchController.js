@@ -20,4 +20,14 @@ const getLimitedSearchResultController = async (req, res) => {
     }
 }
 
-module.exports = {getAllSearchResultController, getLimitedSearchResultController};
+const insertManualController = async (req, res) => {
+    const manual = req.body;
+    try {
+        const data = await searchService.insertManual(manual);
+        res.json(data);
+    } catch (e) {
+        res.json(e);
+    }
+}
+
+module.exports = {getAllSearchResultController, getLimitedSearchResultController, insertManualController};

@@ -4,7 +4,7 @@ const client = new Client({node : 'http://localhost:9200' })
 async function getManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'fullindex',
+            index: 'fullindextwo',
             from: 0,
             size: 30,
             query :{
@@ -18,7 +18,7 @@ async function getManuals(word) {
 async function getAllManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'fullindex',
+            index: 'fullindextwo',
             from: 0,
             size: 100,
             query :{
@@ -29,4 +29,20 @@ async function getAllManuals(word) {
     })
 }
 
-module.exports = {getManuals, getAllManuals};
+async function insertManual(manual) {
+    return new Promise(async (resolve, reject) => {
+        const result = await client.index({
+            index : 'fullindextwo',
+            body : {
+                brand : manual.brand,
+                category : manual.category,
+                url : manual.url,
+                title : manual.title
+            }
+        })
+        await client.indices.refresh({index: 'fullindextwo'})
+        resolve(result);
+    })
+}
+
+module.exports = {getManuals, getAllManuals, insertManual};
