@@ -32,7 +32,7 @@ async function getAllManuals(word) {
 async function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         const result = await client.index({
-            index : 'completeindex',
+            index : 'completeindextwo',
             body : {
                 brand : manual.brand,
                 category : manual.category,
