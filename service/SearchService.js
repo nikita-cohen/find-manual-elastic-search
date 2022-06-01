@@ -41,7 +41,7 @@ async function insertManual(manual) {
                 parsingData : new Date().toString()
             }
         })
-        await client.indices.refresh({index: 'full'})
+        await client.indices.refresh({index: 'completeindexthree'})
         resolve(result);
     })
 }
