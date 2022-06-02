@@ -57,7 +57,7 @@ async function insertManual(manual) {
             await addManual(manual);
             const result = await client.create({
                 index: 'completeindexfour',
-                id : manual.title,
+                id : manual.id,
                 body: {
                     brand: manual.brand,
                     category: manual.category,
