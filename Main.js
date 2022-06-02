@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const searchRouter = require('./router/SearchRouter');
 
-require('./config/ConfigDB');
+require('./config/ConfigDB')
 
 app.use(express.json());
 app.use(cors());
