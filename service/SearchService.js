@@ -34,7 +34,7 @@ async function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
             const result = await client.create({
-                index: 'completeindexthree',
+                index: 'completeindexfour',
                 id : manual.title,
                 body: {
                     brand: manual.brand,
@@ -44,7 +44,7 @@ async function insertManual(manual) {
                     parsingData: new Date().toString()
                 }
             })
-            await client.indices.refresh({index: 'completeindexthree'})
+            await client.indices.refresh({index: 'completeindexfour'})
             resolve(result);
         } catch (e) {
             reject(e);
