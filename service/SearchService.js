@@ -29,20 +29,29 @@ async function getAllManuals(word) {
     })
 }
 
+
 async function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
-        const result = await client.index({
-            index : 'completeindexthree',
-            body : {
-                brand : manual.brand,
-                category : manual.category,
-                url : manual.url,
-                title : manual.title,
-                parsingData : new Date().toString()
-            }
-        })
-        await client.indices.refresh({index: 'completeindexthree'})
-        resolve(result);
+        const exists = await client.exists({
+            index: 'completeindexthree',
+            title : manual.title
+        });
+        if (!exists) {
+            const result = await client.index({
+                index : 'completeindexthree',
+                body : {
+                    brand : manual.brand,
+                    category : manual.category,
+                    url : manual.url,
+                    title : manual.title,
+                    parsingData : new Date().toString()
+                }
+            })
+            await client.indices.refresh({index: 'completeindexthree'})
+            resolve(result);
+        } else {
+            reject("document already exists")
+        }
     })
 }
 
