@@ -96,7 +96,11 @@ async function deleteByQuery() {
                 index: 'completeindexfour',
                 body: {
                     query: {
-                        match: { url : 'https://www.manualslib.comundefined' }
+                        bool : {
+                            must :{
+                                match: { url : 'https://www.manualslib.comundefined' }
+                            }
+                        }
                     }
                 }
             }, function (error, response) {
