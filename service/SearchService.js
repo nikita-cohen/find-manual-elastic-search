@@ -54,7 +54,7 @@ async function getAllManuals(word) {
 async function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
-            await addManual(manual);
+            // await addManual(manual);
             const result = await client.create({
                 index: 'completeindexfour',
                 id : manual.id,
@@ -98,7 +98,7 @@ async function deleteByQuery() {
                     query: {
                         bool : {
                             must :{
-                                match: { url : 'https://www.manualslib.comundefined' }
+                                term : { url : 'https://www.manualslib.comundefined' }
                             }
                         }
                     }
