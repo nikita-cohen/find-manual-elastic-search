@@ -74,4 +74,42 @@ async function insertManual(manual) {
     })
 }
 
-module.exports = {getManuals, getAllManuals, insertManual};
+async function deleteByQueryMongo() {
+    return new Promise((resolve, reject) => {
+        manualSchema.find({url : "https://www.manualslib.comundefined"})
+            .remove()
+            .exec((error, result) => {
+                if (error) {
+                    reject(error)
+                }
+                resolve(result);
+            })
+    })
+
+}
+
+async function deleteByQuery() {
+    return new Promise(async (resolve, reject) =>  {
+        try {
+            await deleteByQueryMongo();
+            await client.deleteByQuery({
+                index: 'completeindexfour',
+                body: {
+                    query: {
+                        match: { url : 'https://www.manualslib.comundefined' }
+                    }
+                }
+            }, function (error, response) {
+                if (error) {
+                    reject(error);
+                }
+                resolve(response)
+            });
+        } catch (e) {
+            reject(e)
+        }
+
+    })
+}
+
+module.exports = {getManuals, getAllManuals, insertManual, deleteByQuery};
