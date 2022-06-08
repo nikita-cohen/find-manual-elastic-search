@@ -54,20 +54,28 @@ function getAllManuals(word) {
 function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
-            const result = await client.create({
-                index: 'completeindexfour',
-                id : manual.id,
-                body: {
-                    brand: manual.brand,
-                    category: manual.category,
-                    url: manual.url,
-                    title: manual.title,
-                    parsingData: new Date().toString()
-                }
-            })
-            await client.indices.refresh({index: 'completeindexfour'})
-            await addManual(manual);
-            resolve(result);
+            try {
+                const result = await client.create({
+                    index: 'completeindexfive',
+                    id : manual.id,
+                    body: {
+                        brand: manual.brand,
+                        category: manual.category,
+                        url: manual.url,
+                        title: manual.title,
+                        parsingData: new Date().toString()
+                    }
+                })
+                await client.indices.refresh({index: 'completeindexfive'})
+            } catch (e) {
+                console.log("elasticsearch")
+            }
+            try {
+                await addManual(manual);
+            } catch (e) {
+                console.log("mongodb")
+            }
+            resolve("ok");
         } catch (e) {
             reject(e);
         }
