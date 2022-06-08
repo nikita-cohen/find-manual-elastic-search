@@ -50,6 +50,45 @@ function getAllManuals(word) {
     })
 }
 
+function createNgIndex() {
+    let settings = {
+        "analysis": {
+            "tokenizer": {
+                "my_ngram_tokenizer": {
+                    "type": "nGram",
+                    "min_gram": "2",
+                    "max_gram": "3",
+                    "token_chars": ["letter", "digit"]
+                }
+            },
+            "analyzer": {
+                "my_ngram_analyzer": {
+                    "tokenizer": "my_ngram_tokenizer",
+                    "type": "custom"
+                }
+            }
+        }
+    };
+    let mapping = {
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "term_vector": "yes",
+                    "analyzer": "my_ngram_analyzer"
+                }
+            }
+    };
+    return client.indices.create({
+        index: 'completeindexsix',
+        body: {
+            settings: settings,
+            mappings: mapping
+        }
+    });
+}
+
+createNgIndex().then();
+
 
 function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
