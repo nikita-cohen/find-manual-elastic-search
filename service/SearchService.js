@@ -22,7 +22,7 @@ const addManual = (manual) => {
 }
 
 
-async function getManuals(word) {
+function getManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
             index: 'completeindexfour',
@@ -36,7 +36,7 @@ async function getManuals(word) {
     })
 }
 
-async function getAllManuals(word) {
+function getAllManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
             index: 'completeindexfour',
@@ -51,10 +51,9 @@ async function getAllManuals(word) {
 }
 
 
-async function insertManual(manual) {
+function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
-            // await addManual(manual);
             const result = await client.create({
                 index: 'completeindexfour',
                 id : manual.id,
@@ -67,6 +66,7 @@ async function insertManual(manual) {
                 }
             })
             await client.indices.refresh({index: 'completeindexfour'})
+            await addManual(manual);
             resolve(result);
         } catch (e) {
             reject(e);
@@ -74,7 +74,7 @@ async function insertManual(manual) {
     })
 }
 
-async function deleteByQueryMongo() {
+function deleteByQueryMongo() {
     return new Promise((resolve, reject) => {
         manualSchema.find({url : "https://www.manualslib.comundefined"})
             .remove()
@@ -88,7 +88,7 @@ async function deleteByQueryMongo() {
 
 }
 
-async function deleteByQuery() {
+function deleteByQuery() {
     return new Promise(async (resolve, reject) =>  {
         try {
             await deleteByQueryMongo();
