@@ -25,7 +25,7 @@ const addManual = (manual) => {
 function getManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'some-index',
+            index: 'completeindexfive',
             from: 0,
             size: 30,
             query: {
