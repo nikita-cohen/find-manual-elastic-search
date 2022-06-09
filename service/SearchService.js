@@ -25,7 +25,7 @@ const addManual = (manual) => {
 function getManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'completeindexfour',
+            index: 'some-index',
             from: 0,
             size: 30,
             query: {
@@ -39,7 +39,7 @@ function getManuals(word) {
 function getAllManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'completeindexfour',
+            index: 'completeindexfive',
             from: 0,
             size: 500,
             query: {
@@ -49,46 +49,6 @@ function getAllManuals(word) {
         resolve(result.hits.hits);
     })
 }
-
-function createNgIndex() {
-    let settings = {
-        "analysis": {
-            "tokenizer": {
-                "my_ngram_tokenizer": {
-                    "type": "nGram",
-                    "min_gram": "2",
-                    "max_gram": "3",
-                    "token_chars": ["letter", "digit"]
-                }
-            },
-            "analyzer": {
-                "my_ngram_analyzer": {
-                    "tokenizer": "my_ngram_tokenizer",
-                    "type": "custom"
-                }
-            }
-        }
-    };
-    let mapping = {
-            "properties": {
-                "title": {
-                    "type": "string",
-                    "term_vector": "yes",
-                    "analyzer": "my_ngram_analyzer"
-                }
-            }
-    };
-    return client.indices.create({
-        index: 'completeindexsix',
-        body: {
-            settings: settings,
-            mappings: mapping
-        }
-    });
-}
-
-createNgIndex().then();
-
 
 function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
