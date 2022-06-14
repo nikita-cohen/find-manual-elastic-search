@@ -61,7 +61,6 @@ function insertManual(manual) {
                     const operations = manual.data.flatMap(doc => [{
                         index: {
                             _index: 'complete-index-one',
-                            id : doc.id,
                             _id: doc.id
                         }
                     }, doc])
