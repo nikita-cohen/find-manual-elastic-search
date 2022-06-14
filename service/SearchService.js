@@ -60,7 +60,7 @@ function insertManual(manual) {
                 try {
                     const operations = manual.data.flatMap(doc => [{
                         index: {
-                            _index: 'complete-index-one',
+                            _index: 'complete-index-two',
                             _id: doc.id
                         }
                     }, doc])
@@ -81,7 +81,7 @@ function insertManual(manual) {
             } else {
                 try {
                     const result = await client.create({
-                        index: 'complete-index-one',
+                        index: 'complete-index-two',
                         id: manual.id,
                         body: {
                             brand: manual.brand,
@@ -91,7 +91,7 @@ function insertManual(manual) {
                             parsingData: new Date().toString()
                         }
                     })
-                    await client.indices.refresh({index: 'complete-index-one'})
+                    await client.indices.refresh({index: 'complete-index-two'})
                 } catch (e) {
                     console.log("elastic")
                     console.log(e)
