@@ -4,6 +4,8 @@ const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
     return new Promise((resolve, reject) => {
+        console.log(manual)
+        console.log("lalallaa------------------------------")
         for (let i = 0; i < manual.length; i++) {
             const newManual = new manualSchema({
                 "brand": manual[i].brand,
