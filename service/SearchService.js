@@ -79,7 +79,6 @@ function insertManual(manual) {
                 try {
                     await addManual(manual.data);
                 } catch (e) {
-                    console.log("mongo")
                     console.log(e)
                 }
                 resolve("ok");
