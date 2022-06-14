@@ -60,16 +60,16 @@ function getAllManuals(word) {
 function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
-            if (Array.isArray(manual)) {
+            if (manual.data && Array.isArray(manual.data)) {
                 try {
-                    const operations = manual.flatMap(doc => [{ index: { _index: 'completeindexseven' } }, doc])
+                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'completeindexseven' } }, doc])
                     const bulkResponse = await client.bulk({ refresh: true, operations })
                 } catch (e) {
                     console.log("elasticsearch")
                 }
 
                 try {
-                    await addManual(manual);
+                    await addManual(manual.data);
                 } catch (e) {
                     console.log("mongodb")
                 }
