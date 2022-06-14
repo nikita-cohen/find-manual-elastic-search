@@ -4,6 +4,7 @@ const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
     return new Promise((resolve, reject) => {
+        if (!Array.isArray(manual)) {
             const newManual = new manualSchema({
                 "brand" : manual.brand,
                 "category" : manual.category,
@@ -18,6 +19,25 @@ const addManual = (manual) => {
                     resolve(newManual)
                 }
             })
+        } else {
+            for (let i = 0; i < manual.length; i++) {
+                const newManual = new manualSchema({
+                    "brand" : manual[i].brand,
+                    "category" : manual[i].category,
+                    "url" : manual.url[i],
+                    "title" : manual.title[i],
+                    "parsingDate" : new Date().toString()
+                })
+                newManual.save((err) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        resolve(newManual)
+                    }
+                })
+            }
+        }
+
     })
 }
 
@@ -55,20 +75,42 @@ function insertManual(manual) {
         try {
             if (manual.data && Array.isArray(manual.data)) {
                 try {
-                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'completeindexeleven', doc_id : doc.id } }, doc])
+                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'complete-index', _id : doc.id } }, doc])
                     const bulkResponse = await client.bulk({ refresh: true, operations })
                 } catch (e) {
-                    console.log("elasticsearch")
+                    console.log(e)
                 }
 
                 try {
-                    for (let i = 0; i < manual.data.length; i++) {
-                        await addManual(manual.data[i]);
-                    }
+                    await addManual(manual.data);
                 } catch (e) {
-                    console.log("mongodb")
+                    console.log(e)
                 }
                     resolve("ok");
+
+            } else {
+                try {
+                    const result = await client.create({
+                        index: 'complete-index',
+                        id : manual.id,
+                        body: {
+                            brand: manual.brand,
+                            category: manual.category,
+                            url: manual.url,
+                            title: manual.title,
+                            parsingData: new Date().toString()
+                        }
+                    })
+                    await client.indices.refresh({index: 'complete-index'})
+                } catch (e) {
+                    console.log(e)
+                }
+                try {
+                    await addManual(manual);
+                } catch (e) {
+                    console.log(e)
+                }
+                resolve("ok");
             }
         } catch (e) {
             reject(e);
