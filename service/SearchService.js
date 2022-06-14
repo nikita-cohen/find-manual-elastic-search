@@ -4,20 +4,27 @@ const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
     return new Promise((resolve, reject) => {
-        const newManual = new manualSchema({
-            "brand" : manual.brand,
-            "category" : manual.category,
-            "url" : manual.url,
-            "title" : manual.title,
-            "parsingDate" : new Date().toString()
-        })
-        newManual.save((err) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(newManual)
-            }
-        })
+        if (!Array.isArray(manual)) {
+            const newManual = new manualSchema({
+                "brand" : manual.brand,
+                "category" : manual.category,
+                "url" : manual.url,
+                "title" : manual.title,
+                "parsingDate" : new Date().toString()
+            })
+            newManual.save((err) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(newManual)
+                }
+            })
+        } else {
+            manualSchema.insertMany(manual)
+                .then(data => resolve(data))
+                .catch(err => reject(err))
+        }
+
     })
 }
 
@@ -54,16 +61,20 @@ function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
             if (Array.isArray(manual)) {
-                const operations = manual.flatMap(doc => [{ index: { _index: 'completeindexseven' } }, doc])
-                const bulkResponse = await client.bulk({ refresh: true, operations })
-                for (let i = 0; i < manual.length; i++) {
-                    try {
-                        await addManual(manual[i]);
-                    } catch (e) {
-                        console.log("mongodb")
-                    }
-                    resolve("ok");
+                try {
+                    const operations = manual.flatMap(doc => [{ index: { _index: 'completeindexseven' } }, doc])
+                    const bulkResponse = await client.bulk({ refresh: true, operations })
+                } catch (e) {
+                    console.log("elasticsearch")
                 }
+
+                try {
+                    await addManual(manual);
+                } catch (e) {
+                    console.log("mongodb")
+                }
+                    resolve("ok");
+
             } else {
                 try {
                     const result = await client.create({
