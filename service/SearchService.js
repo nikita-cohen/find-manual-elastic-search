@@ -4,39 +4,22 @@ const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
     return new Promise((resolve, reject) => {
-        if (!Array.isArray(manual)) {
+        for (let i = 0; i < manual.length; i++) {
             const newManual = new manualSchema({
-                "brand" : manual.brand,
-                "category" : manual.category,
-                "url" : manual.url,
-                "title" : manual.title,
-                "parsingDate" : new Date().toString()
+                "brand": manual[i].brand,
+                "category": manual[i].category,
+                "url": manual.url[i],
+                "title": manual.title[i],
+                "parsingDate": new Date().toString()
             })
             newManual.save((err) => {
                 if (err) {
                     reject(err)
-                } else {
-                    resolve(newManual)
                 }
             })
-        } else {
-            for (let i = 0; i < manual.length; i++) {
-                const newManual = new manualSchema({
-                    "brand" : manual[i].brand,
-                    "category" : manual[i].category,
-                    "url" : manual.url[i],
-                    "title" : manual.title[i],
-                    "parsingDate" : new Date().toString()
-                })
-                newManual.save((err) => {
-                    if (err) {
-                        reject(err)
-                    } else {
-                        resolve(newManual)
-                    }
-                })
-            }
         }
+
+        resolve("ok")
 
     })
 }
@@ -79,8 +62,13 @@ function insertManual(manual) {
             console.log(manual.data)
             if (manual.data && Array.isArray(manual.data)) {
                 try {
-                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'complete-index', _id : doc.id } }, doc])
-                    const bulkResponse = await client.bulk({ refresh: true, operations })
+                    const operations = manual.data.flatMap(doc => [{
+                        index: {
+                            _index: 'complete-index',
+                            _id: doc.id
+                        }
+                    }, doc])
+                    const bulkResponse = await client.bulk({refresh: true, operations})
                 } catch (e) {
                     console.log(e)
                     console.log("elastic")
@@ -92,13 +80,13 @@ function insertManual(manual) {
                     console.log("mongo")
                     console.log(e)
                 }
-                    resolve("ok");
+                resolve("ok");
 
             } else {
                 try {
                     const result = await client.create({
                         index: 'complete-index',
-                        id : manual.id,
+                        id: manual.id,
                         body: {
                             brand: manual.brand,
                             category: manual.category,
@@ -128,7 +116,7 @@ function insertManual(manual) {
 
 function deleteByQueryMongo() {
     return new Promise((resolve, reject) => {
-        manualSchema.find({url : "https://www.manualslib.comundefined"})
+        manualSchema.find({url: "https://www.manualslib.comundefined"})
             .remove()
             .exec((error, result) => {
                 if (error) {
@@ -141,16 +129,16 @@ function deleteByQueryMongo() {
 }
 
 function deleteByQuery() {
-    return new Promise(async (resolve, reject) =>  {
+    return new Promise(async (resolve, reject) => {
         try {
             await deleteByQueryMongo();
             await client.deleteByQuery({
                 index: 'completeindexfour',
                 body: {
                     query: {
-                        bool : {
-                            must :{
-                                term : { url : 'https://www.manualslib.comundefined' }
+                        bool: {
+                            must: {
+                                term: {url: 'https://www.manualslib.comundefined'}
                             }
                         }
                     }
