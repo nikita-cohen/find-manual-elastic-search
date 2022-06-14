@@ -54,23 +54,9 @@ function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
             if (Array.isArray(manual)) {
+                const operations = manual.flatMap(doc => [{ index: { _index: 'completeindexseven' } }, doc])
+                const bulkResponse = await client.bulk({ refresh: true, operations })
                 for (let i = 0; i < manual.length; i++) {
-                    try {
-                        const result = await client.create({
-                            index: 'completeindexseven',
-                            id : manual[i].id,
-                            body: {
-                                brand: manual[i].brand,
-                                category: manual[i].category,
-                                url: manual[i].url,
-                                title: manual[i].title,
-                                parsingData: new Date().toString()
-                            }
-                        })
-                        await client.indices.refresh({index: 'completeindexseven'})
-                    } catch (e) {
-                        console.log("elasticsearch")
-                    }
                     try {
                         await addManual(manual[i]);
                     } catch (e) {
