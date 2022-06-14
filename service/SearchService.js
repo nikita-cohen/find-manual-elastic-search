@@ -83,11 +83,13 @@ function insertManual(manual) {
                     const bulkResponse = await client.bulk({ refresh: true, operations })
                 } catch (e) {
                     console.log(e)
+                    console.log("elastic")
                 }
 
                 try {
                     await addManual(manual.data);
                 } catch (e) {
+                    console.log("mongo")
                     console.log(e)
                 }
                     resolve("ok");
@@ -107,11 +109,13 @@ function insertManual(manual) {
                     })
                     await client.indices.refresh({index: 'complete-index'})
                 } catch (e) {
+                    console.log("elastic")
                     console.log(e)
                 }
                 try {
                     await addManual(manual);
                 } catch (e) {
+                    console.log("mongo")
                     console.log(e)
                 }
                 resolve("ok");
