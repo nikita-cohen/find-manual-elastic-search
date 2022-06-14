@@ -10,8 +10,8 @@ const addManual = (manual) => {
             const newManual = new manualSchema({
                 "brand": manual[i].brand,
                 "category": manual[i].category,
-                "url": manual.url[i],
-                "title": manual.title[i],
+                "url": manual[i].url,
+                "title": manual[i].title,
                 "parsingDate": new Date().toString()
             })
             newManual.save((err) => {
@@ -79,6 +79,7 @@ function insertManual(manual) {
                 try {
                     await addManual(manual.data);
                 } catch (e) {
+                    console.log("mongo")
                     console.log(e)
                 }
                 resolve("ok");
