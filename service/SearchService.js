@@ -53,28 +53,55 @@ function getAllManuals(word) {
 function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
-            try {
-                const result = await client.create({
-                    index: 'completeindexfive',
-                    id : manual.id,
-                    body: {
-                        brand: manual.brand,
-                        category: manual.category,
-                        url: manual.url,
-                        title: manual.title,
-                        parsingData: new Date().toString()
+            if (Array.isArray(manual)) {
+                for (let i = 0; i < manual.length; i++) {
+                    try {
+                        const result = await client.create({
+                            index: 'completeindexseven',
+                            id : manual[i].id,
+                            body: {
+                                brand: manual[i].brand,
+                                category: manual[i].category,
+                                url: manual[i].url,
+                                title: manual[i].title,
+                                parsingData: new Date().toString()
+                            }
+                        })
+                        await client.indices.refresh({index: 'completeindexseven'})
+                    } catch (e) {
+                        console.log("elasticsearch")
                     }
-                })
-                await client.indices.refresh({index: 'completeindexfive'})
-            } catch (e) {
-                console.log("elasticsearch")
+                    try {
+                        await addManual(manual[i]);
+                    } catch (e) {
+                        console.log("mongodb")
+                    }
+                    resolve("ok");
+                }
+            } else {
+                try {
+                    const result = await client.create({
+                        index: 'completeindexseven',
+                        id : manual.id,
+                        body: {
+                            brand: manual.brand,
+                            category: manual.category,
+                            url: manual.url,
+                            title: manual.title,
+                            parsingData: new Date().toString()
+                        }
+                    })
+                    await client.indices.refresh({index: 'completeindexseven'})
+                } catch (e) {
+                    console.log("elasticsearch")
+                }
+                try {
+                    await addManual(manual);
+                } catch (e) {
+                    console.log("mongodb")
+                }
+                resolve("ok");
             }
-            try {
-                await addManual(manual);
-            } catch (e) {
-                console.log("mongodb")
-            }
-            resolve("ok");
         } catch (e) {
             reject(e);
         }
