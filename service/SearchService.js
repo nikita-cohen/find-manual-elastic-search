@@ -73,6 +73,10 @@ function getAllManuals(word) {
 function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log("manual")
+            console.log(manual)
+            console.log("manual Data")
+            console.log(manual.data)
             if (manual.data && Array.isArray(manual.data)) {
                 try {
                     const operations = manual.data.flatMap(doc => [{ index: { _index: 'complete-index', _id : doc.id } }, doc])
