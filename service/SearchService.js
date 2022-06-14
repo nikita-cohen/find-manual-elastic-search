@@ -90,12 +90,12 @@ function insertManual(manual) {
                     })
                     await client.indices.refresh({index: 'completeindexeight'})
                 } catch (e) {
-                    console.log("elasticsearch")
+                    console.log(e)
                 }
                 try {
                     await addManual(manual);
                 } catch (e) {
-                    console.log("mongodb")
+                    console.log(e)
                 }
                 resolve("ok");
             }
