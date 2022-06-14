@@ -4,7 +4,6 @@ const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
     return new Promise((resolve, reject) => {
-        if (!Array.isArray(manual)) {
             const newManual = new manualSchema({
                 "brand" : manual.brand,
                 "category" : manual.category,
@@ -19,12 +18,6 @@ const addManual = (manual) => {
                     resolve(newManual)
                 }
             })
-        } else {
-            manualSchema.insertMany(manual)
-                .then(data => resolve(data))
-                .catch(err => reject(err))
-        }
-
     })
 }
 
@@ -62,14 +55,16 @@ function insertManual(manual) {
         try {
             if (manual.data && Array.isArray(manual.data)) {
                 try {
-                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'completeindexten' } }, doc])
+                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'completeindexeleven', doc_id : doc.id } }, doc])
                     const bulkResponse = await client.bulk({ refresh: true, operations })
                 } catch (e) {
                     console.log("elasticsearch")
                 }
 
                 try {
-                    await addManual(manual.data);
+                    for (let i = 0; i < manual.data.length; i++) {
+                        await addManual(manual.data[i]);
+                    }
                 } catch (e) {
                     console.log("mongodb")
                 }
