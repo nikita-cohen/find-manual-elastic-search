@@ -62,7 +62,7 @@ function insertManual(manual) {
         try {
             if (manual.data && Array.isArray(manual.data)) {
                 try {
-                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'completeindexseven' } }, doc])
+                    const operations = manual.data.flatMap(doc => [{ index: { _index: 'completeindexeight' } }, doc])
                     const bulkResponse = await client.bulk({ refresh: true, operations })
                 } catch (e) {
                     console.log("elasticsearch")
@@ -78,7 +78,7 @@ function insertManual(manual) {
             } else {
                 try {
                     const result = await client.create({
-                        index: 'completeindexseven',
+                        index: 'completeindexeight',
                         id : manual.id,
                         body: {
                             brand: manual.brand,
@@ -88,7 +88,7 @@ function insertManual(manual) {
                             parsingData: new Date().toString()
                         }
                     })
-                    await client.indices.refresh({index: 'completeindexseven'})
+                    await client.indices.refresh({index: 'completeindexeight'})
                 } catch (e) {
                     console.log("elasticsearch")
                 }
