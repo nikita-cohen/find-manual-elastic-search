@@ -4,8 +4,6 @@ const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
     return new Promise((resolve, reject) => {
-        console.log(manual)
-        console.log("lalallaa------------------------------")
         for (let i = 0; i < manual.length; i++) {
             const newManual = new manualSchema({
                 "brand": manual[i].brand,
@@ -58,15 +56,14 @@ function getAllManuals(word) {
 function insertManual(manual) {
     return new Promise(async (resolve, reject) => {
         try {
-            console.log("manual")
-            console.log(manual)
-            console.log("manual Data")
-            console.log(manual.data)
             if (manual.data && Array.isArray(manual.data)) {
                 try {
                     const operations = manual.data.flatMap(doc => [{
                         index: {
-                            _index: 'complete-index',
+                            _index: 'complete-index-one',
+                            doc_id : doc.id,
+                            __id : doc.id,
+                            id : doc.id,
                             _id: doc.id
                         }
                     }, doc])
@@ -87,7 +84,7 @@ function insertManual(manual) {
             } else {
                 try {
                     const result = await client.create({
-                        index: 'complete-index',
+                        index: 'complete-index-one',
                         id: manual.id,
                         body: {
                             brand: manual.brand,
@@ -97,7 +94,7 @@ function insertManual(manual) {
                             parsingData: new Date().toString()
                         }
                     })
-                    await client.indices.refresh({index: 'complete-index'})
+                    await client.indices.refresh({index: 'complete-index-one'})
                 } catch (e) {
                     console.log("elastic")
                     console.log(e)
