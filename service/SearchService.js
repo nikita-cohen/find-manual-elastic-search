@@ -28,7 +28,7 @@ const addManual = (manual) => {
 function getManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'completeindexfive',
+            index: 'complete-index',
             from: 0,
             size: 30,
             query: {
@@ -42,7 +42,7 @@ function getManuals(word) {
 function getAllManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'completeindexfive',
+            index: 'complete-index',
             from: 0,
             size: 500,
             query: {
@@ -60,7 +60,7 @@ function insertManual(manual) {
                 try {
                     const operations = manual.data.flatMap(doc => [{
                         index: {
-                            _index: 'complete-index-two',
+                            _index: 'complete-index',
                             _id: doc.id
                         }
                     }, doc])
@@ -81,7 +81,7 @@ function insertManual(manual) {
             } else {
                 try {
                     const result = await client.create({
-                        index: 'complete-index-two',
+                        index: 'complete-index',
                         id: manual.id,
                         body: {
                             brand: manual.brand,
@@ -91,7 +91,7 @@ function insertManual(manual) {
                             parsingData: new Date().toString()
                         }
                     })
-                    await client.indices.refresh({index: 'complete-index-two'})
+                    await client.indices.refresh({index: 'complete-index'})
                 } catch (e) {
                     console.log("elastic")
                     console.log(e)
