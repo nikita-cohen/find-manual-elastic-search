@@ -61,12 +61,12 @@ function insertManual(manual) {
                     for (let i = 0; i < manual.data.length; i++) {
                         const result = await client.create({
                             index: 'complete-index',
-                            id: manual[i].id,
+                            id: manual.data[i].id,
                             body: {
-                                brand: manual[i].brand,
-                                category: manual[i].category,
-                                url: manual[i].url,
-                                title: manual[i].title,
+                                brand: manual.data[i].brand,
+                                category: manual.data[i].category,
+                                url: manual.data[i].url,
+                                title: manual.data[i].title,
                                 parsingData: new Date().toString()
                             }
                         })
