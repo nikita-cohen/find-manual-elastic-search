@@ -1,5 +1,5 @@
 const {Client} = require('@elastic/elasticsearch');
-const client = new Client({node: 'http://localhost:9200', requestTimeout : Infinity})
+const client = new Client({node: 'http://localhost:9200'})
 const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
@@ -58,13 +58,21 @@ function insertManual(manual) {
         try {
             if (manual.data && Array.isArray(manual.data)) {
                 try {
-                    const operations = manual.data.flatMap(doc => [{
-                        index: {
-                            _index: 'complete-index',
-                            _id: doc.id
-                        }
-                    }, doc])
-                    const bulkResponse = await client.bulk({refresh: true, operations})
+                    for (let i = 0; i < manual.data.length; i++) {
+                        const result = await client.create({
+                            index: 'complete-index',
+                            id: manual[i].id,
+                            body: {
+                                brand: manual[i].brand,
+                                category: manual[i].category,
+                                url: manual[i].url,
+                                title: manual[i].title,
+                                parsingData: new Date().toString()
+                            }
+                        })
+                        await client.indices.refresh({index: 'complete-index'})
+                    }
+
                 } catch (e) {
                     console.log(e)
                     console.log("elastic")
