@@ -1,5 +1,5 @@
 const {Client} = require('@elastic/elasticsearch');
-const client = new Client({node: 'http://localhost:9200'})
+const client = new Client({node: 'http://localhost:9200', requestTimeout : Infinity})
 const manualSchema = require("../module/ManualSchema");
 
 const addManual = (manual) => {
