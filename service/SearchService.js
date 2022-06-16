@@ -59,18 +59,22 @@ function insertManual(manual) {
             if (manual.data && Array.isArray(manual.data)) {
                 try {
                     for (let i = 0; i < manual.data.length; i++) {
-                        const result = await client.create({
-                            index: 'complete-index',
-                            id: manual.data[i].id,
-                            body: {
-                                brand: manual.data[i].brand,
-                                category: manual.data[i].category,
-                                url: manual.data[i].url,
-                                title: manual.data[i].title,
-                                parsingData: new Date().toString()
-                            }
-                        })
-                        await client.indices.refresh({index: 'complete-index'})
+                        try {
+                            const result = await client.create({
+                                index: 'complete-index-four',
+                                id: manual.data[i].id,
+                                body: {
+                                    brand: manual.data[i].brand,
+                                    category: manual.data[i].category,
+                                    url: manual.data[i].url,
+                                    title: manual.data[i].title,
+                                    parsingData: new Date().toString()
+                                }
+                            })
+                            await client.indices.refresh({index: 'complete-index-four'})
+                        } catch (e) {
+                            console.log("inside loop")
+                        }
                     }
 
                 } catch (e) {
@@ -89,7 +93,7 @@ function insertManual(manual) {
             } else {
                 try {
                     const result = await client.create({
-                        index: 'complete-index',
+                        index: 'complete-index-four',
                         id: manual.id,
                         body: {
                             brand: manual.brand,
@@ -99,7 +103,7 @@ function insertManual(manual) {
                             parsingData: new Date().toString()
                         }
                     })
-                    await client.indices.refresh({index: 'complete-index'})
+                    await client.indices.refresh({index: 'complete-index-four'})
                 } catch (e) {
                     console.log("elastic")
                     console.log(e)
