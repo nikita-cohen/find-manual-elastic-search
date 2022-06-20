@@ -30,13 +30,5 @@ const insertManualController = async (req, res) => {
     }
 }
 
-const deleteManualController = async (req, res) => {
-    try {
-        const data = await searchService.deleteByQuery();
-        res.json(data);
-    } catch (e) {
-        res.json(e);
-    }
-}
 
-module.exports = {getAllSearchResultController, getLimitedSearchResultController, insertManualController, deleteManualController};
+module.exports = {getAllSearchResultController, getLimitedSearchResultController, insertManualController};
