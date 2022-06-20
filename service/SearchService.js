@@ -31,4 +31,4 @@ function getAllManuals(word) {
 
 
 
-module.exports = {getManuals, getAllManuals, insertManual};
+module.exports = {getManuals, getAllManuals};
