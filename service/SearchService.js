@@ -4,7 +4,7 @@ const client = new Client({node: 'http://localhost:9200'})
 function getManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'complete-index',
+            index: 'complete-manual',
             from: 0,
             size: 30,
             query: {
@@ -18,7 +18,7 @@ function getManuals(word) {
 function getAllManuals(word) {
     return new Promise(async (resolve, reject) => {
         const result = await client.search({
-            index: 'complete-index',
+            index: 'complete-manual',
             from: 0,
             size: 500,
             query: {
